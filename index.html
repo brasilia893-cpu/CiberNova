@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CiberNova — Accesorios tecnológicos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#10151C;
+    --paper:#F6F4EF;
+    --signal:#FF5A2E;
+    --graphite:#2B313A;
+    --steel:#6B7480;
+    --cable:#1F9D74;
+    --line: rgba(43,49,58,0.18);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:'Inter', sans-serif;
+    background:var(--paper);
+    color:var(--graphite);
+    line-height:1.5;
+    overflow-x:hidden;
+  }
+  h1,h2,h3,.display{
+    font-family:'Big Shoulders Display', sans-serif;
+    font-weight:800;
+    line-height:0.95;
+    letter-spacing:0.2px;
+  }
+  a{color:inherit; text-decoration:none;}
+  button{font-family:inherit; cursor:pointer; border:none; background:none;}
+  img,svg{display:block;}
+
+  /* ---------- ANNOUNCEMENT BAR ---------- */
+  .announce{
+    background:var(--ink); color:#D7DCE1; text-align:center;
+    font-size:12.5px; font-weight:500; padding:9px 5%; letter-spacing:0.2px;
+  }
+  .announce b{color:#fff; font-weight:700;}
+
+  /* ---------- NAV ---------- */
+  .nav{
+    position:sticky; top:0; z-index:50;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:16px 5%; gap:24px;
+    background:rgba(246,244,239,0.94);
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);
+  }
+  .brand{display:flex; align-items:baseline; gap:10px; flex-shrink:0;}
+  .brand .mark{font-family:'Big Shoulders Display'; font-weight:900; font-size:26px; letter-spacing:0.5px;}
+  .brand .tag{font-size:11px; color:var(--steel); letter-spacing:0.3px;}
+  .nav-links{display:flex; align-items:center; gap:26px;}
+  .nav-links a{font-size:14px; font-weight:500; color:var(--graphite); padding:4px 0; border-bottom:2px solid transparent; transition:border-color .15s;}
+  .nav-links a:hover{border-color:var(--signal);}
+  .nav-search{
+    flex-grow:1; max-width:360px; display:flex; align-items:center; gap:8px;
+    border:1px solid var(--line); padding:8px 14px; background:#fff;
+  }
+  .nav-search svg{width:15px; height:15px; stroke:var(--steel); flex-shrink:0;}
+  .nav-search input{border:none; background:none; font-size:13.5px; width:100%; padding:0;}
+  .nav-search input:focus{outline:none;}
+  .nav-right{display:flex; align-items:center; gap:18px; flex-shrink:0;}
+  .icon-btn{width:20px; height:20px; stroke:var(--graphite); fill:none;}
+  .cart-btn{
+    position:relative; display:flex; align-items:center; gap:8px;
+    padding:9px 16px; border:1.5px solid var(--graphite); font-size:14px; font-weight:600;
+  }
+  .cart-count{
+    position:absolute; top:-8px; right:-8px;
+    background:var(--signal); color:#fff; font-size:11px; font-weight:700;
+    width:19px; height:19px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+  }
+  @media (max-width: 900px){ .nav-search, .nav-links{display:none;} }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    background:var(--ink); color:var(--paper);
+    padding:80px 5% 0;
+    display:grid; grid-template-columns:1fr 0.95fr; gap:60px; align-items:center;
+    position:relative; overflow:hidden;
+  }
+  .hero::before{
+    content:''; position:absolute; top:-200px; right:-160px; width:520px; height:520px;
+    background:radial-gradient(circle, rgba(255,90,46,0.16), transparent 70%);
+    pointer-events:none;
+  }
+  .eyebrow{
+    display:flex; align-items:center; gap:8px;
+    font-size:12.5px; font-weight:600; letter-spacing:0.3px; color:#D7DCE1;
+    margin-bottom:24px;
+  }
+  .eyebrow .dot{width:7px; height:7px; border-radius:50%; background:var(--cable);}
+  .hero h1{font-size:clamp(38px,4.6vw,58px); color:#fff; max-width:12ch; letter-spacing:0.2px;}
+  .hero p{margin-top:22px; font-size:17px; color:#B9C1CB; max-width:46ch;}
+  .hero-ctas{display:flex; align-items:center; gap:24px; margin-top:36px; flex-wrap:wrap;}
+  .btn-primary{
+    background:var(--signal); color:#fff; font-weight:700; font-size:15px;
+    padding:15px 28px; border:1.5px solid var(--signal);
+    transition:background .15s;
+  }
+  .btn-primary:hover{background:#e64c22;}
+  .btn-ghost-light{font-size:14px; font-weight:600; color:#fff; border-bottom:1.5px solid var(--signal); padding-bottom:2px;}
+
+  .hero-stats{
+    display:flex; gap:36px; margin-top:52px; padding-top:28px;
+    border-top:1px solid rgba(255,255,255,0.14); position:relative; z-index:1;
+  }
+  .hero-stats div{display:flex; flex-direction:column; gap:4px;}
+  .hero-stats .num{font-family:'Big Shoulders Display'; font-size:26px; font-weight:800; color:#fff;}
+  .hero-stats .lbl{font-size:12px; color:#9AA4AF;}
+
+  /* Hero visual: bento grid of product tiles */
+  .hero-visual{
+    position:relative; display:grid; grid-template-columns:1.2fr 1fr; grid-template-rows:1fr 1fr;
+    gap:14px; height:420px; padding-bottom:60px;
+  }
+  .bento{
+    background:linear-gradient(155deg, rgba(255,255,255,0.07), rgba(255,255,255,0.02));
+    border:1px solid rgba(255,255,255,0.14);
+    display:flex; flex-direction:column; justify-content:space-between; padding:20px;
+    position:relative; overflow:hidden;
+  }
+  .bento.big{grid-row:1 / span 2;}
+  .bento .b-icon{width:34px; height:34px; stroke:#fff; fill:none; stroke-width:1.4; opacity:0.9;}
+  .bento .b-icon.accent{stroke:var(--signal);}
+  .bento .b-label{font-size:13px; font-weight:600; color:#fff;}
+  .bento .b-sub{font-size:11.5px; color:#9AA4AF; margin-top:2px;}
+  .rating-card{
+    position:absolute; left:-14px; bottom:14px; background:#fff; color:var(--graphite);
+    padding:12px 16px; display:flex; align-items:center; gap:10px; box-shadow:0 12px 30px rgba(0,0,0,0.28);
+    z-index:2; min-width:190px;
+  }
+  .rating-card .stars{color:#F2A93B; font-size:13px; letter-spacing:1px;}
+  .rating-card .rc-txt{font-size:11.5px; color:var(--steel); line-height:1.3;}
+  .rating-card .rc-num{font-weight:800; font-family:'Big Shoulders Display'; font-size:16px;}
+  @media (max-width:760px){ .hero-visual{display:none;} }
+
+  /* ---------- TRUST BAND ---------- */
+  .trust{
+    display:flex; justify-content:center; gap:60px; flex-wrap:wrap;
+    padding:26px 5%; border-bottom:1px solid var(--line);
+    background:#fff;
+  }
+  .trust-item{display:flex; align-items:center; gap:10px; font-size:13.5px; font-weight:600; color:var(--graphite);}
+  .trust-item svg{width:20px; height:20px; stroke:var(--cable); flex-shrink:0;}
+
+  /* ---------- CATALOG ---------- */
+  .section{padding:70px 5%;}
+  .section-head{display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:34px; flex-wrap:wrap; gap:16px;}
+  .section-head h2{font-size:clamp(28px,3.5vw,40px);}
+  .section-head p{color:var(--steel); font-size:14.5px; max-width:40ch;}
+
+  .filters{display:flex; gap:10px; flex-wrap:wrap; margin-bottom:34px;}
+  .filter-pill{
+    padding:8px 16px; border:1.5px solid var(--graphite); font-size:13.5px; font-weight:600;
+    background:transparent; color:var(--graphite); transition:all .15s;
+  }
+  .filter-pill.active, .filter-pill:hover{background:var(--graphite); color:var(--paper);}
+
+  .grid{display:grid; grid-template-columns:repeat(auto-fill, minmax(240px,1fr)); gap:22px;}
+  .card{
+    border:1px solid var(--line); background:#fff; position:relative;
+    display:flex; flex-direction:column;
+    transition:border-color .15s, transform .15s, box-shadow .15s;
+  }
+  .card:hover{border-color:var(--graphite); transform:translateY(-3px); box-shadow:0 14px 28px rgba(16,21,28,0.08);}
+  .card::before, .card::after{
+    content:''; position:absolute; width:10px; height:10px; border-color:var(--signal); border-style:solid; opacity:0;
+    transition:opacity .15s;
+  }
+  .card::before{top:-1px; left:-1px; border-width:2px 0 0 2px;}
+  .card::after{bottom:-1px; right:-1px; border-width:0 2px 2px 0;}
+  .card:hover::before, .card:hover::after{opacity:1;}
+  .card-media{
+    position:relative; height:120px; background:linear-gradient(155deg,#F6F4EF,#ECE9E1);
+    display:flex; align-items:center; justify-content:center; border-bottom:1px solid var(--line);
+  }
+  .card-media svg{width:38px; height:38px; stroke:var(--graphite); fill:none; stroke-width:1.4;}
+  .badge{
+    position:absolute; top:10px; left:10px; font-size:10.5px; font-weight:700; letter-spacing:0.3px;
+    padding:4px 9px; background:var(--ink); color:#fff;
+  }
+  .badge.new{background:var(--cable);}
+  .card-body{padding:18px; display:flex; flex-direction:column; gap:8px; flex-grow:1;}
+  .card-cat{font-size:11px; color:var(--steel); font-weight:600; letter-spacing:0.3px;}
+  .card-name{font-size:16px; font-weight:700;}
+  .card-rating{display:flex; align-items:center; gap:6px; font-size:12px; color:var(--steel);}
+  .card-rating .stars{color:#F2A93B; letter-spacing:1px; font-size:12px;}
+  .card-spec{font-size:13px; color:var(--steel); flex-grow:1;}
+  .card-bottom{display:flex; align-items:center; justify-content:space-between; margin-top:6px;}
+  .card-price{font-size:18px; font-weight:800; font-family:'Big Shoulders Display';}
+  .add-btn{
+    font-size:13px; font-weight:700; padding:9px 14px; border:1.5px solid var(--graphite); color:var(--graphite);
+    transition:all .15s;
+  }
+  .add-btn:hover{background:var(--graphite); color:#fff;}
+  .add-btn.added{background:var(--cable); border-color:var(--cable); color:#fff;}
+
+  /* ---------- HOW IT WORKS ---------- */
+  .how{background:#fff; border-top:1px solid var(--line); border-bottom:1px solid var(--line);}
+  .how-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:30px; margin-top:10px;}
+  .how-step{padding:24px 0; border-top:2px solid var(--graphite);}
+  .how-step .n{font-family:'Big Shoulders Display'; font-size:34px; font-weight:900; color:var(--signal);}
+  .how-step h3{font-size:19px; margin:8px 0 8px; font-weight:700; font-family:'Inter';}
+  .how-step p{font-size:14px; color:var(--steel);}
+  @media (max-width:760px){ .how-grid{grid-template-columns:1fr;} .hero{grid-template-columns:1fr; padding-bottom:40px;} .hero-stats{gap:24px; flex-wrap:wrap;} }
+
+  /* ---------- FOOTER ---------- */
+  footer{background:var(--ink); color:#B9C1CB; padding:60px 5% 30px;}
+  .foot-grid{display:grid; grid-template-columns:1.4fr 1fr 1fr 1fr; gap:40px; padding-bottom:40px; border-bottom:1px solid rgba(255,255,255,0.12);}
+  .foot-grid h4{color:#fff; font-size:13px; letter-spacing:0.4px; margin-bottom:16px;}
+  .foot-grid a, .foot-grid p{display:block; font-size:14px; margin-bottom:10px; color:#B9C1CB;}
+  .foot-brand .mark{font-family:'Big Shoulders Display'; font-weight:900; font-size:26px; color:#fff;}
+  .newsletter{margin-top:20px; display:flex; max-width:340px; border:1px solid rgba(255,255,255,0.25);}
+  .newsletter input{flex-grow:1; background:none; border:none; padding:12px 14px; color:#fff; font-size:13.5px;}
+  .newsletter input::placeholder{color:#8A94A0;}
+  .newsletter input:focus{outline:none;}
+  .newsletter button{background:var(--signal); color:#fff; font-size:12.5px; font-weight:700; padding:0 16px;}
+  .pay-pills{display:flex; gap:8px; flex-wrap:wrap; margin-top:14px;}
+  .pay-pills span{border:1px solid rgba(255,255,255,0.25); font-size:11.5px; padding:5px 10px; color:#e7e7e7;}
+  .foot-bottom{display:flex; justify-content:space-between; padding-top:24px; font-size:12.5px; color:#7C8794; flex-wrap:wrap; gap:10px;}
+  @media (max-width:760px){ .foot-grid{grid-template-columns:1fr 1fr;} }
+
+  /* ---------- CART DRAWER ---------- */
+  .overlay{
+    position:fixed; inset:0; background:rgba(16,21,28,0.5); z-index:90;
+    opacity:0; pointer-events:none; transition:opacity .2s;
+  }
+  .overlay.show{opacity:1; pointer-events:auto;}
+  .drawer{
+    position:fixed; top:0; right:0; height:100%; width:min(420px,92vw);
+    background:var(--paper); z-index:100; transform:translateX(100%);
+    transition:transform .25s ease; display:flex; flex-direction:column;
+  }
+  .drawer.open{transform:translateX(0);}
+  .drawer-head{display:flex; justify-content:space-between; align-items:center; padding:22px; border-bottom:1px solid var(--line);}
+  .drawer-head h3{font-size:22px;}
+  .close-x{font-size:22px; line-height:1;}
+  .drawer-items{flex-grow:1; overflow-y:auto; padding:16px 22px;}
+  .drawer-empty{color:var(--steel); font-size:14px; margin-top:30px; text-align:center;}
+  .d-item{display:flex; gap:14px; padding:16px 0; border-bottom:1px solid var(--line);}
+  .d-icon{width:44px; height:44px; border:1px solid var(--line); flex-shrink:0; display:flex; align-items:center; justify-content:center;}
+  .d-icon svg{width:22px; height:22px; stroke:var(--graphite); fill:none; stroke-width:1.6;}
+  .d-info{flex-grow:1;}
+  .d-info .name{font-size:14.5px; font-weight:700;}
+  .d-info .price{font-size:13px; color:var(--steel); margin-top:2px;}
+  .d-qty{display:flex; align-items:center; gap:10px; margin-top:8px;}
+  .d-qty button{border:1px solid var(--graphite); width:22px; height:22px; font-size:14px; font-weight:700; display:flex; align-items:center; justify-content:center;}
+  .d-remove{font-size:12px; color:var(--signal); font-weight:600; margin-top:8px;}
+  .drawer-foot{padding:22px; border-top:1px solid var(--line);}
+  .subtotal-row{display:flex; justify-content:space-between; font-size:15px; font-weight:700; margin-bottom:16px;}
+  .checkout-btn{width:100%; padding:15px; background:var(--graphite); color:#fff; font-weight:700; font-size:15px;}
+  .checkout-btn:disabled{opacity:0.4; cursor:not-allowed;}
+
+  /* ---------- CHECKOUT MODAL ---------- */
+  .modal-wrap{
+    position:fixed; inset:0; z-index:110; display:flex; align-items:center; justify-content:center;
+    opacity:0; pointer-events:none; transition:opacity .2s; padding:20px;
+  }
+  .modal-wrap.show{opacity:1; pointer-events:auto;}
+  .modal{
+    background:#fff; width:min(560px,100%); max-height:88vh; overflow-y:auto;
+    border:1px solid var(--graphite); padding:34px;
+  }
+  .modal h3{font-size:26px; margin-bottom:6px;}
+  .demo-flag{
+    display:inline-flex; align-items:center; gap:6px; font-size:11px; font-weight:700; letter-spacing:0.3px;
+    color:var(--signal); border:1px solid var(--signal); padding:4px 9px; margin-bottom:18px;
+  }
+  .form-row{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:14px;}
+  .form-row.full{grid-template-columns:1fr;}
+  label{display:block; font-size:12.5px; font-weight:600; margin-bottom:6px; color:var(--graphite);}
+  input, select{
+    width:100%; padding:11px 12px; border:1px solid var(--line); font-size:14px; font-family:inherit;
+    background:var(--paper);
+  }
+  input:focus, select:focus{outline:2px solid var(--graphite); outline-offset:1px;}
+  .pay-methods{display:flex; gap:12px; margin-bottom:18px;}
+  .pay-opt{flex:1; border:1.5px solid var(--line); padding:12px; text-align:center; font-size:13.5px; font-weight:600; cursor:pointer;}
+  .pay-opt.active{border-color:var(--graphite); background:var(--paper);}
+  .modal .checkout-btn{margin-top:6px;}
+  .modal-close{position:absolute; top:18px; right:18px; font-size:20px;}
+  .modal{position:relative;}
+
+  .success h3{font-size:28px;}
+  .success .n{color:var(--cable); font-family:'Big Shoulders Display'; font-size:22px; font-weight:800;}
+  .success ul{margin:16px 0; padding:0; list-style:none;}
+  .success li{display:flex; justify-content:space-between; font-size:14px; padding:8px 0; border-bottom:1px solid var(--line);}
+  .note-box{background:var(--paper); border:1px dashed var(--steel); padding:14px; font-size:12.5px; color:var(--steel); margin-top:18px;}
+</style>
+</head>
+<body>
+
+<div class="announce">Envío gratis en pedidos superiores a <b>$50</b> · Entrega estimada de 3 a 7 días hábiles</div>
+
+<nav class="nav">
+  <div class="brand">
+    <span class="mark">CiberNova.</span>
+    <span class="tag">accesorios tech</span>
+  </div>
+  <div class="nav-search">
+    <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7" fill="none" stroke-width="2"/><path d="M21 21l-4.3-4.3" stroke-width="2" stroke-linecap="round"/></svg>
+    <input type="text" placeholder="Buscar cargadores, audífonos, cables…">
+  </div>
+  <div class="nav-links">
+    <a href="#catalogo">Catálogo</a>
+    <a href="#como-funciona">Cómo enviamos</a>
+    <a href="#contacto">Contacto</a>
+  </div>
+  <div class="nav-right">
+    <svg class="icon-btn" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" stroke-width="2"/><circle cx="12" cy="7" r="4" stroke-width="2"/></svg>
+    <button class="cart-btn" id="openCart">
+      Carrito
+      <span class="cart-count" id="cartCount">0</span>
+    </button>
+  </div>
+</nav>
+
+<section class="hero">
+  <div>
+    <div class="eyebrow"><span class="dot"></span>Envíos activos a más de 30 países</div>
+    <h1>Tu tecnología, lista para el viaje.</h1>
+    <p>Cargadores, audio, protección y gaming seleccionados por calidad y durabilidad. Cada pedido sale empacado y rastreado desde el momento en que confirmas la compra.</p>
+    <div class="hero-ctas">
+      <a href="#catalogo" class="btn-primary">Ver catálogo</a>
+      <a href="#como-funciona" class="btn-ghost-light">Cómo enviamos</a>
+    </div>
+    <div class="hero-stats">
+      <div><span class="num">12,000+</span><span class="lbl">Pedidos entregados</span></div>
+      <div><span class="num">30+</span><span class="lbl">Países con envío</span></div>
+      <div><span class="num">4.8/5</span><span class="lbl">Valoración de clientes</span></div>
+    </div>
+  </div>
+
+  <div class="hero-visual">
+    <div class="bento big">
+      <svg class="b-icon accent" viewBox="0 0 24 24"><path d="M4 15v-3a8 8 0 0116 0v3" stroke-width="1.6"/><rect x="2" y="14" width="5" height="7" rx="1.5" stroke-width="1.6"/><rect x="17" y="14" width="5" height="7" rx="1.5" stroke-width="1.6"/></svg>
+      <div>
+        <div class="b-label">Audio premium</div>
+        <div class="b-sub">Cancelación de ruido y batería de larga duración</div>
+      </div>
+    </div>
+    <div class="bento">
+      <svg class="b-icon" viewBox="0 0 24 24"><path d="M7 3v6M17 3v6M4 9h16l-2 12H6L4 9z" stroke-width="1.6"/></svg>
+      <div>
+        <div class="b-label">Carga rápida</div>
+        <div class="b-sub">GaN y power banks certificados</div>
+      </div>
+    </div>
+    <div class="bento">
+      <svg class="b-icon" viewBox="0 0 24 24"><path d="M12 3l8 4v5c0 5-3.5 7.5-8 9-4.5-1.5-8-4-8-9V7l8-4z" stroke-width="1.6"/></svg>
+      <div>
+        <div class="b-label">Protección real</div>
+        <div class="b-sub">Fundas con certificación anticaídas</div>
+      </div>
+    </div>
+    <div class="rating-card">
+      <span class="stars">★★★★★</span>
+      <div class="rc-txt"><span class="rc-num">4.8</span> / 5 · +3,200 reseñas verificadas</div>
+    </div>
+  </div>
+</section>
+
+<div class="trust">
+  <div class="trust-item"><svg viewBox="0 0 24 24"><path d="M3 12h13M12 5l7 7-7 7" stroke-width="2" stroke-linecap="round"/></svg> Envío rastreado puerta a puerta</div>
+  <div class="trust-item"><svg viewBox="0 0 24 24"><rect x="4" y="10" width="16" height="10" rx="1" stroke-width="2"/><path d="M8 10V7a4 4 0 018 0v3" stroke-width="2"/></svg> Pago cifrado y seguro</div>
+  <div class="trust-item"><svg viewBox="0 0 24 24"><path d="M12 3l8 4v5c0 5-3.5 7.5-8 9-4.5-1.5-8-4-8-9V7l8-4z" stroke-width="2"/></svg> Garantía de 12 meses</div>
+</div>
+
+<section class="section" id="catalogo">
+  <div class="section-head">
+    <div>
+      <h2>Catálogo</h2>
+      <p>Piezas probadas para el uso diario: carga, sonido, protección y setup gamer.</p>
+    </div>
+  </div>
+  <div class="filters" id="filters"></div>
+  <div class="grid" id="productGrid"></div>
+</section>
+
+<section class="section how" id="como-funciona">
+  <div class="section-head">
+    <div>
+      <h2>Cómo llega tu pedido</h2>
+      <p>Tres pasos, sin sorpresas, desde el clic hasta la puerta de tu casa.</p>
+    </div>
+  </div>
+  <div class="how-grid">
+    <div class="how-step">
+      <div class="n">01</div>
+      <h3>Confirmas y pagas</h3>
+      <p>Eliges tarjeta o PayPal. La transacción queda cifrada de extremo a extremo.</p>
+    </div>
+    <div class="how-step">
+      <div class="n">02</div>
+      <h3>Empacamos y despachamos</h3>
+      <p>Tu pedido sale en un plazo de 24–48 horas con número de guía asignado.</p>
+    </div>
+    <div class="how-step">
+      <div class="n">03</div>
+      <h3>Rastreas hasta la entrega</h3>
+      <p>Sigues cada movimiento del paquete hasta que toca tu puerta.</p>
+    </div>
+  </div>
+</section>
+
+<footer id="contacto">
+  <div class="foot-grid">
+    <div class="foot-brand">
+      <span class="mark">CiberNova.</span>
+      <p style="margin-top:14px; max-width:32ch;">Accesorios tecnológicos seleccionados, empacados y enviados con cuidado a cualquier destino.</p>
+      <div class="newsletter">
+        <input type="email" placeholder="Tu correo para ofertas">
+        <button type="button">Suscribirme</button>
+      </div>
+      <div class="pay-pills">
+        <span>Tarjeta de crédito</span><span>Tarjeta débito</span><span>PayPal</span>
+      </div>
+    </div>
+    <div>
+      <h4>TIENDA</h4>
+      <a href="#catalogo">Catálogo</a>
+      <a href="#como-funciona">Envíos</a>
+      <a href="#">Devoluciones</a>
+    </div>
+    <div>
+      <h4>AYUDA</h4>
+      <a href="#">Estado de mi pedido</a>
+      <a href="#">Contacto</a>
+      <a href="#">Preguntas frecuentes</a>
+    </div>
+    <div>
+      <h4>LEGAL</h4>
+      <a href="#">Términos</a>
+      <a href="#">Privacidad</a>
+    </div>
+  </div>
+  <div class="foot-bottom">
+    <span>© 2026 CiberNova. Todos los derechos reservados.</span>
+    <span>Página de demostración — ver notas de integración al confirmar un pedido.</span>
+  </div>
+</footer>
+
+<div class="overlay" id="overlay"></div>
+
+<div class="drawer" id="drawer">
+  <div class="drawer-head">
+    <h3>Tu carrito</h3>
+    <button class="close-x" id="closeDrawer">&times;</button>
+  </div>
+  <div class="drawer-items" id="drawerItems"></div>
+  <div class="drawer-foot">
+    <div class="subtotal-row"><span>Subtotal</span><span id="subtotal">$0.00</span></div>
+    <button class="checkout-btn" id="goCheckout" disabled>Finalizar compra</button>
+  </div>
+</div>
+
+<div class="modal-wrap" id="modalWrap">
+  <div class="modal" id="modalContent"></div>
+</div>
+
+<script>
+const ICONS = {
+  charger: '<path d="M7 3v6M17 3v6M4 9h16l-2 12H6L4 9z"/>',
+  power: '<rect x="6" y="4" width="12" height="16" rx="1"/><path d="M9 4V2h6v2"/>',
+  cable: '<path d="M4 6c4 0 4 4 8 4s4-4 8-4"/><path d="M4 18c4 0 4-4 8-4s4 4 8 4"/>',
+  hub: '<circle cx="12" cy="6" r="2"/><circle cx="6" cy="18" r="2"/><circle cx="18" cy="18" r="2"/><path d="M12 8v4M12 12L7 16M12 12l5 4"/>',
+  headphones: '<path d="M4 15v-3a8 8 0 0116 0v3"/><rect x="2" y="14" width="5" height="7" rx="1.5"/><rect x="17" y="14" width="5" height="7" rx="1.5"/>',
+  speaker: '<rect x="6" y="3" width="12" height="18" rx="2"/><circle cx="12" cy="9" r="2.5"/><circle cx="12" cy="16" r="1"/>',
+  shield: '<path d="M12 3l8 4v5c0 5-3.5 7.5-8 9-4.5-1.5-8-4-8-9V7l8-4z"/>',
+  glass: '<rect x="5" y="4" width="14" height="16" rx="1.5"/><path d="M9 4v16M15 4v16"/>',
+  mouse: '<rect x="7" y="3" width="10" height="18" rx="5"/><path d="M12 3v7"/>',
+  keyboard: '<rect x="3" y="7" width="18" height="11" rx="1.5"/><path d="M6 11h.01M9 11h.01M12 11h.01M15 11h.01M18 11h.01M7 14h10"/>',
+  gaming: '<path d="M6 10h4M8 8v4"/><circle cx="16" cy="9" r="1"/><circle cx="18" cy="11" r="1"/><rect x="2" y="7" width="20" height="10" rx="5"/>',
+  stand: '<path d="M12 3v10M6 21l6-8 6 8"/>'
+};
+
+const PRODUCTS = [
+  {id:1, name:'Cargador GaN 65W', cat:'Carga y energía', spec:'2 puertos USB-C, carga rápida', price:34.90, icon:'charger', rating:4.8, reviews:512, badge:'Más vendido'},
+  {id:2, name:'Power bank 10,000mAh', cat:'Carga y energía', spec:'Carga 2 dispositivos a la vez', price:29.90, icon:'power', rating:4.6, reviews:298},
+  {id:3, name:'Cable USB-C a USB-C 2m', cat:'Conectividad', spec:'Trenzado, resistente a dobleces', price:12.90, icon:'cable', rating:4.7, reviews:410},
+  {id:4, name:'Hub USB-C 7 en 1', cat:'Conectividad', spec:'HDMI, USB 3.0, lector SD', price:44.90, icon:'hub', rating:4.5, reviews:187},
+  {id:5, name:'Audífonos inalámbricos ANC', cat:'Audio', spec:'Cancelación de ruido, 30h batería', price:79.90, icon:'headphones', rating:4.9, reviews:864, badge:'Más vendido'},
+  {id:6, name:'Parlante Bluetooth portátil', cat:'Audio', spec:'Resistente al agua IPX6', price:39.90, icon:'speaker', rating:4.6, reviews:233},
+  {id:7, name:'Funda protectora antigolpes', cat:'Protección', spec:'Certificación anticaídas 2m', price:19.90, icon:'shield', rating:4.7, reviews:356},
+  {id:8, name:'Mica de vidrio templado (x2)', cat:'Protección', spec:'Dureza 9H, instalación fácil', price:9.90, icon:'glass', rating:4.4, reviews:201},
+  {id:9, name:'Mouse inalámbrico ergonómico', cat:'Gaming', spec:'Silencioso, 3 niveles DPI', price:24.90, icon:'mouse', rating:4.5, reviews:174},
+  {id:10, name:'Teclado mecánico compacto', cat:'Gaming', spec:'Switches rojos, retroiluminado', price:59.90, icon:'keyboard', rating:4.8, reviews:96, badge:'Nuevo'},
+  {id:11, name:'Auriculares gamer con mic', cat:'Gaming', spec:'Sonido envolvente 7.1', price:49.90, icon:'gaming', rating:4.6, reviews:142},
+  {id:12, name:'Soporte ajustable de mesa', cat:'Conectividad', spec:'Para laptop o tablet', price:17.90, icon:'stand', rating:4.5, reviews:120}
+];
+
+const CATS = ['Todos', ...new Set(PRODUCTS.map(p => p.cat))];
+let activeCat = 'Todos';
+let cart = {}; // id -> qty
+
+function iconSvg(key){
+  return `<svg viewBox="0 0 24 24">${ICONS[key]}</svg>`;
+}
+
+function renderFilters(){
+  const el = document.getElementById('filters');
+  el.innerHTML = CATS.map(c =>
+    `<button class="filter-pill ${c===activeCat?'active':''}" data-cat="${c}">${c}</button>`
+  ).join('');
+  el.querySelectorAll('.filter-pill').forEach(btn=>{
+    btn.addEventListener('click', ()=>{ activeCat = btn.dataset.cat; renderFilters(); renderGrid(); });
+  });
+}
+
+function renderGrid(){
+  const el = document.getElementById('productGrid');
+  const items = activeCat === 'Todos' ? PRODUCTS : PRODUCTS.filter(p=>p.cat===activeCat);
+  el.innerHTML = items.map(p => `
+    <div class="card">
+      <div class="card-media">
+        ${p.badge ? `<span class="badge ${p.badge==='Nuevo'?'new':''}">${p.badge}</span>` : ''}
+        ${iconSvg(p.icon)}
+      </div>
+      <div class="card-body">
+        <span class="card-cat">${p.cat.toUpperCase()}</span>
+        <div class="card-name">${p.name}</div>
+        <div class="card-rating"><span class="stars">★★★★★</span> ${p.rating} (${p.reviews})</div>
+        <div class="card-spec">${p.spec}</div>
+        <div class="card-bottom">
+          <span class="card-price">$${p.price.toFixed(2)}</span>
+          <button class="add-btn" data-id="${p.id}">Agregar</button>
+        </div>
+      </div>
+    </div>
+  `).join('');
+  el.querySelectorAll('.add-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const id = Number(btn.dataset.id);
+      cart[id] = (cart[id]||0) + 1;
+      renderCart();
+      btn.textContent = 'Agregado';
+      btn.classList.add('added');
+      setTimeout(()=>{ btn.textContent='Agregar'; btn.classList.remove('added'); }, 900);
+    });
+  });
+}
+
+function cartTotal(){
+  return Object.entries(cart).reduce((sum,[id,qty])=>{
+    const p = PRODUCTS.find(p=>p.id===Number(id));
+    return sum + p.price*qty;
+  },0);
+}
+
+function renderCart(){
+  const count = Object.values(cart).reduce((a,b)=>a+b,0);
+  document.getElementById('cartCount').textContent = count;
+  const wrap = document.getElementById('drawerItems');
+  const entries = Object.entries(cart).filter(([_,qty])=>qty>0);
+
+  if(entries.length===0){
+    wrap.innerHTML = '<div class="drawer-empty">Tu carrito está vacío por ahora.</div>';
+  } else {
+    wrap.innerHTML = entries.map(([id,qty])=>{
+      const p = PRODUCTS.find(p=>p.id===Number(id));
+      return `
+        <div class="d-item">
+          <div class="d-icon">${iconSvg(p.icon)}</div>
+          <div class="d-info">
+            <div class="name">${p.name}</div>
+            <div class="price">$${p.price.toFixed(2)} c/u</div>
+            <div class="d-qty">
+              <button data-act="dec" data-id="${p.id}">−</button>
+              <span>${qty}</span>
+              <button data-act="inc" data-id="${p.id}">+</button>
+            </div>
+            <div class="d-remove" data-act="rm" data-id="${p.id}">Quitar</div>
+          </div>
+        </div>`;
+    }).join('');
+  }
+
+  wrap.querySelectorAll('[data-act]').forEach(el=>{
+    el.addEventListener('click', ()=>{
+      const id = Number(el.dataset.id);
+      const act = el.dataset.act;
+      if(act==='inc') cart[id]++;
+      if(act==='dec') cart[id] = Math.max(0, cart[id]-1);
+      if(act==='rm') cart[id] = 0;
+      renderCart();
+    });
+  });
+
+  document.getElementById('subtotal').textContent = '$' + cartTotal().toFixed(2);
+  document.getElementById('goCheckout').disabled = count===0;
+}
+
+// Drawer open/close
+const drawer = document.getElementById('drawer');
+const overlay = document.getElementById('overlay');
+function openDrawer(){ drawer.classList.add('open'); overlay.classList.add('show'); }
+function closeDrawer(){ drawer.classList.remove('open'); overlay.classList.remove('show'); }
+document.getElementById('openCart').addEventListener('click', openDrawer);
+document.getElementById('closeDrawer').addEventListener('click', closeDrawer);
+overlay.addEventListener('click', ()=>{ closeDrawer(); closeModal(); });
+
+// Checkout modal
+const modalWrap = document.getElementById('modalWrap');
+const modalContent = document.getElementById('modalContent');
+function openModal(html){ modalContent.innerHTML = html; modalWrap.classList.add('show'); overlay.classList.add('show'); attachModalEvents(); }
+function closeModal(){ modalWrap.classList.remove('show'); }
+
+function checkoutSummaryHtml(){
+  const entries = Object.entries(cart).filter(([_,qty])=>qty>0);
+  const rows = entries.map(([id,qty])=>{
+    const p = PRODUCTS.find(p=>p.id===Number(id));
+    return `<li><span>${p.name} × ${qty}</span><span>$${(p.price*qty).toFixed(2)}</span></li>`;
+  }).join('');
+  return `
+    <button class="modal-close" id="modalClose">&times;</button>
+    <h3>Confirmar pedido</h3>
+    <p style="color:var(--steel); font-size:13.5px; margin-bottom:18px;">
+      Revisa tu pedido. En el siguiente paso vas a la pasarela segura de Stripe para pagar y darnos tu dirección de envío.
+    </p>
+    <ul style="list-style:none; margin-bottom:18px;">
+      ${rows}
+      <li style="display:flex; justify-content:space-between; font-weight:800; padding-top:10px; border-top:1px solid var(--line);">
+        <span>Total</span><span>$${cartTotal().toFixed(2)}</span>
+      </li>
+    </ul>
+    <div id="checkoutError" style="color:var(--signal); font-size:13px; margin-bottom:12px; display:none;"></div>
+    <button class="checkout-btn" id="goToStripe">Ir a pagar de forma segura</button>
+  `;
+}
+
+function successHtml(){
+  return `
+    <button class="modal-close" id="modalClose">&times;</button>
+    <div class="success">
+      <h3>Procesando…</h3>
+      <p>Te estamos llevando a la pantalla de pago segura de Stripe.</p>
+    </div>
+  `;
+}
+
+function attachModalEvents(){
+  const closeBtn = document.getElementById('modalClose');
+  if(closeBtn) closeBtn.addEventListener('click', closeModal);
+
+  const goBtn = document.getElementById('goToStripe');
+  if(goBtn){
+    goBtn.addEventListener('click', async ()=>{
+      goBtn.textContent = 'Conectando con Stripe…';
+      goBtn.disabled = true;
+      const errBox = document.getElementById('checkoutError');
+      const items = Object.entries(cart).filter(([_,qty])=>qty>0).map(([id,qty])=>({id:Number(id), qty}));
+      try{
+        const res = await fetch('/create-checkout-session', {
+          method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body: JSON.stringify({items})
+        });
+        const data = await res.json();
+        if(!res.ok) throw new Error(data.error || 'No se pudo iniciar el pago.');
+        window.location.href = data.url; // Redirige a la pasarela de Stripe
+      }catch(err){
+        errBox.textContent = 'No pudimos conectar con el servidor de pagos: ' + err.message + '. Si estás probando en local, confirma que el backend (npm start) esté corriendo.';
+        errBox.style.display = 'block';
+        goBtn.textContent = 'Ir a pagar de forma segura';
+        goBtn.disabled = false;
+      }
+    });
+  }
+}
+
+document.getElementById('goCheckout').addEventListener('click', ()=>{
+  openModal(checkoutSummaryHtml());
+});
+
+renderFilters();
+renderGrid();
+renderCart();
+</script>
+
+</body>
+</html>
